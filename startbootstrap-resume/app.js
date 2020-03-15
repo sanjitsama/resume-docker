@@ -1,26 +1,21 @@
 const http = require('http')
 const fs = require('fs')
-const port = 3000
+const port = 3000;
+const express = require('express');
+var path = require('path');
 
-const server = http.createServer(function(req,res) {
-    res.writeHead(200, { 'Content-Type': 'text/html' })
-    fs.readFile('index.html', function(error, data) {
-        if(error) {
-            res.writeHead(404)
-            res.write('Error: File Not Found')
-        }
-        else {
-            res.write(data)
-        }
-        res.end()
-    })
-})
+//Init express
+const app = express();
 
-server.listen(port, function(error) {
-    if (error) {
-        console.log('Something went wrong', error)
-    } else {
-        console.log('Server is listening on port ' + port)
-    }
-})
+app.get('/', function(req, res) {
+    console.log("THIS IS THE DIRECTORY: " + __dirname);
+        res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+app.use('/img', express.static(path.join(__dirname, 'img')))
+app.use('/js', express.static(path.join(__dirname, 'js')))
+app.use('/vendor', express.static(path.join(__dirname, 'vendor')))
+app.use('/css', express.static(path.join(__dirname, 'css')))
+
+app.listen(port, () => console.log('You are now listening to the greatest... port ' + port));
 
